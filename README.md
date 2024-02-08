@@ -1,4 +1,8 @@
-# Time of your Life
+# Time of your Life - My progress in 4h
+
+Definitely theres room to improve, took so time trying a good way to validate fields, thinking if I should use a UI/UX framework or not, progress on the sync server time... hope its enough! Checked the items I "completed".
+
+Thanks in advance for the oportunity :D
 
 ## Description
 
