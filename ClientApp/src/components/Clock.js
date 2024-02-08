@@ -2,12 +2,19 @@ import { useState, useEffect } from 'react'
 
 function Clock(props) {
   const [date, setDate] = useState(new Date())
+  const [dateDiff, setDateDiff] = useState(0)
 
   function refreshClock() {
-    setDate(new Date())
+    //TBD use date diff to get correct server time
+    setDate(new Date());
   }
 
   useEffect(() => {
+    fetch('clock/timeStamp').then((response) => response.text())
+    .then((timeStamp) => {
+      setDateDiff(timeStamp - date.getTime());
+    })
+
     const timerId = setInterval(refreshClock, 1000)
     return function cleanup() {
       clearInterval(timerId)

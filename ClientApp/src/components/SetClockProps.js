@@ -7,6 +7,8 @@ function SetClockProps(props) {
   const [fontFamily, setFontFamily] = useState(clockProps.fontFamily)
   const [fontColor, setFontColor] = useState(clockProps.fontColor)
   const [blinkColons, setBlinkColons] = useState(clockProps.blinkColons)
+  const [titleFontSize, setTitleFontSize] = useState(clockProps.titleFontSize)
+  const [clockFontSize, setClockFontSize] = useState(clockProps.clockFontSize)
   const [presets, setPresets] = useState([])
   const [loading, setLoading] = useState(true)
 
@@ -33,13 +35,12 @@ function SetClockProps(props) {
   const getProps = () => {
     const props = new ClockProps()
     props.fontFamily = document.getElementById('fontFamily').value
-    props.titleFontSize = document.getElementById('titleFontSize').value
+    props.titleFontSize = titleFontSize;
     props.clockFontSize = document.getElementById('clockFontSize').value
     props.fontColor = document.getElementById('fontColor').value
     props.blinkColons = document.getElementById('blinkColons').checked;
 
     props.titleText = document.getElementById('titleText').value;
-
     return props
   }
 
@@ -98,8 +99,22 @@ function SetClockProps(props) {
     }  
 
     fetch('clock/presets', reqOptions)
-      .then((response) => {refreshData()})
+      .then(() => {refreshData()})
   }
+
+  //DMZ Handle title font size
+  const handleTitleFontSize = (event) => {
+    setTitleFontSize(event.target.value);
+  }
+
+  //DMZ Handle clock font size
+  const handleClockFontSize = (event) => {
+    setClockFontSize(event.target.value);
+  }
+
+  useEffect(() => {
+    setClockProps();
+  }, [titleFontSize, clockFontSize])
 
 
   const presetsDisplay = (() => {
@@ -178,17 +193,17 @@ function SetClockProps(props) {
           <div>
             <div>Title Font Size</div>
             <div>
-              <select id="titleFontSize" onChange={setClockProps}>
-                {fontSizeOptions(clockProps.titleFontSize)}
-              </select>
+              <div class="slidecontainer">
+                <input type="range" min="12" max="64" value={titleFontSize} onChange={handleTitleFontSize} step="2" class="slider" id="titleFontSize" />
+              </div>
             </div>
           </div>
           <div>
             <div>Clock Font Size</div>
             <div>
-              <select id="clockFontSize" onChange={setClockProps}>
-                {fontSizeOptions(clockProps.clockFontSize)}
-              </select>
+              <div class="slidecontainer">
+                <input type="range" min="12" max="64" value={clockFontSize} onChange={handleClockFontSize} step="2" class="slider" id="clockFontSize" />
+              </div>
             </div>
           </div>
           <div>

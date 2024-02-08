@@ -46,9 +46,9 @@ Changes to the React Client Side SPA, will be reflected in the UI in a hot load 
 #### Client
 
 - [ ] Make the clock `Set Clock Props` panel expandable and collapsible
-- [ ] Make the font size selection a slider control
+- [X] Make the font size selection a slider control
 - [ ] Make the colors of the title and the clock different color values
-- [ ] Save the presets to the server at this endpoint:
+- [X] Save the presets to the server at this endpoint:
   `POST: https://localhost:7154/clock/presets`
 - [ ] Select a preset from the list saved on the server to replace the current values and update the clock
 - [ ] Add unit tests

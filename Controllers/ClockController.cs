@@ -17,6 +17,13 @@ public class ClockController : ControllerBase
         _logger = logger;
     }
 
+    [HttpGet, Route("timeStamp")]
+    public long GetTimestamp()
+    {
+        long timeStamp = (long)(DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds;
+        return timeStamp;
+    }
+
     [HttpGet, Route("presets")]
     public IEnumerable<ClockProps> GetPresets()
     {
