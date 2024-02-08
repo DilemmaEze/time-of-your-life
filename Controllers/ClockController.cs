@@ -26,6 +26,7 @@ public class ClockController : ControllerBase
     [HttpPost("presets")]
     public ClockProps AddPreset([FromBody]ClockProps preset)
     {
+        preset.id = Guid.NewGuid();
         _presets.Add(preset);
         return preset;
     }

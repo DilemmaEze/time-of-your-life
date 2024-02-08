@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react'
 function Clock(props) {
   const [date, setDate] = useState(new Date())
 
-
   function refreshClock() {
     setDate(new Date())
   }
@@ -37,7 +36,7 @@ function Clock(props) {
     <div id="Clock">
       <div id="Digits" style={displayStyle}>
         <div id="title" style={titleStyle}>
-          The Time of Your Life
+          {props.clockProps.titleText}
         </div>
         <div id="time" style={clockStyle}>
           {displayText}

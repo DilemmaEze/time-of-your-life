@@ -3,14 +3,16 @@ import ClockProps from './ClockProps'
 
 function SetClockProps(props) {
   const clockProps = new ClockProps()
+  const [titleText, setTitleText] = useState(clockProps.titleText);
   const [fontFamily, setFontFamily] = useState(clockProps.fontFamily)
   const [fontColor, setFontColor] = useState(clockProps.fontColor)
   const [blinkColons, setBlinkColons] = useState(clockProps.blinkColons)
   const [presets, setPresets] = useState([])
   const [loading, setLoading] = useState(true)
 
+
   useEffect(() => {
-    ;(async () => {
+    ; (async () => {
       const response = await fetch('clock/presets')
       const data = await response.json()
       setPresets(data)
@@ -18,19 +20,32 @@ function SetClockProps(props) {
     })()
   }, [])
 
+  const refreshData = () => {
+    console.log()
+    ; (async () => {
+      const response = await fetch('clock/presets')
+      const data = await response.json()
+      setPresets(data)
+      setLoading(false)
+    })()
+  }
+
   const getProps = () => {
     const props = new ClockProps()
     props.fontFamily = document.getElementById('fontFamily').value
     props.titleFontSize = document.getElementById('titleFontSize').value
     props.clockFontSize = document.getElementById('clockFontSize').value
     props.fontColor = document.getElementById('fontColor').value
-    props.blinkColons = document.getElementById('blinkColons').checked
+    props.blinkColons = document.getElementById('blinkColons').checked;
+
+    props.titleText = document.getElementById('titleText').value;
+
     return props
   }
 
   const setClockProps = () => {
     const setProps = getProps()
-    props.setClockProps(setProps)
+    props.setClockProps(setProps);  
   }
 
   const fontSizeOptions = (selctedSize) => {
@@ -58,6 +73,34 @@ function SetClockProps(props) {
     clockProps.blinkColons = document.getElementById('blinkColons').checked
     setClockProps()
   }
+
+  //DMZ: Sets the new title
+  const setTitleTextUI = () => {
+    setTitleText(document.getElementById('titleText').value)
+    clockProps.titleText = document.getElementById('titleText').value
+  }
+
+  //DMZ: Check for enter
+  const handleEnter = (event) => {
+    if (event.key === 'Enter') {
+      setClockProps()
+    }
+  }
+
+  //DMZ: Save Preset
+  const savePreset = () => {
+    const configInfo = getProps();
+
+    const reqOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(configInfo)
+    }  
+
+    fetch('clock/presets', reqOptions)
+      .then((response) => {refreshData()})
+  }
+
 
   const presetsDisplay = (() => {
     console.log(presets)
@@ -109,12 +152,25 @@ function SetClockProps(props) {
             <h2>Settings</h2>
           </div>
           <div>
+            <div>Clock Title</div>
+            <div>
+              <input
+                id="titleText"
+                value={titleText}
+                onChange={setTitleTextUI}
+                onKeyDown={handleEnter}
+              />
+              <button onClick={setClockProps}>✓</button>
+            </div>
+          </div>
+          <div>
             <div>Font Family</div>
             <div>
               <input
                 id="fontFamily"
                 value={fontFamily}
                 onChange={setFontFamilyUI}
+                onKeyDown={handleEnter}
               />
               <button onClick={setClockProps}>✓</button>
             </div>
@@ -142,6 +198,7 @@ function SetClockProps(props) {
                 id="fontColor"
                 value={fontColor}
                 onChange={(e) => setFontColurUI(e)}
+                onKeyDown={handleEnter}
               />
               <button onClick={setClockProps}>✓</button>
             </div>
@@ -161,7 +218,7 @@ function SetClockProps(props) {
             <div>
               <button
                 onClick={() =>
-                  alert('This should save the preset to the sever.')
+                  savePreset()
                 }
               >
                 Save Preset
