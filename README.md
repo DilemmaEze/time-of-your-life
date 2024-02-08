@@ -65,7 +65,7 @@ Changes to the React Client Side SPA, will be reflected in the UI in a hot load 
 #### Client
 
 - [x] Add a color picker to select the font colors for multiple colors
-- [ ] Add the ability to print the time out in text, i.e. "1:32 PM" would be printed out as "one thirty two PM"
+- [X] Add the ability to print the time out in text, i.e. "1:32 PM" would be printed out as "one thirty two PM"
 - [ ] Add an alarms control/presets
 - [ ] Add a testing results output report
 - [ ] Add time zone to the preset and/or be able display multiple clocks/presets at the same time

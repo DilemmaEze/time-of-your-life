@@ -7,6 +7,7 @@ function SetClockProps(props) {
   const [fontFamily, setFontFamily] = useState(clockProps.fontFamily)
   const [fontColor, setFontColor] = useState(clockProps.fontColor)
   const [blinkColons, setBlinkColons] = useState(clockProps.blinkColons)
+  const [timeText, setTimeText] = useState(clockProps.timeText)
   const [titleFontSize, setTitleFontSize] = useState(clockProps.titleFontSize)
   const [clockFontSize, setClockFontSize] = useState(clockProps.clockFontSize)
 
@@ -39,6 +40,8 @@ function SetClockProps(props) {
     props.clockFontSize = document.getElementById('clockFontSize').value
     props.fontColor = document.getElementById('fontColor').value
     props.blinkColons = document.getElementById('blinkColons').checked;
+    props.timeText = document.getElementById('timeText').checked;
+
 
     props.titleText = document.getElementById('titleText').value;
     return props
@@ -62,6 +65,13 @@ function SetClockProps(props) {
   const setBlinkColonsUI = () => {
     setBlinkColons(document.getElementById('blinkColons').checked)
     clockProps.blinkColons = document.getElementById('blinkColons').checked
+    setClockProps()
+  }
+
+  //DMZ: set Time text
+  const setTimeTextUI = () => {
+    setTimeText(document.getElementById('timeText').checked)
+    clockProps.timeText = document.getElementById('timeText').checked
     setClockProps()
   }
 
@@ -263,6 +273,18 @@ function SetClockProps(props) {
               />
             </div>
           </div>
+          <div>
+            <div>Show time text</div>
+            <div>
+              <input
+                id="timeText"
+                checked={timeText}
+                type="checkbox"
+                onChange={setTimeTextUI}
+              />
+            </div>
+          </div>
+
           <div>
             <div>
               <button
