@@ -9,21 +9,21 @@ function SetClockProps(props) {
   const [blinkColons, setBlinkColons] = useState(clockProps.blinkColons)
   const [titleFontSize, setTitleFontSize] = useState(clockProps.titleFontSize)
   const [clockFontSize, setClockFontSize] = useState(clockProps.clockFontSize)
+
+  const [currentPresetId, setCurrentPresetId] = useState(null);
+
   const [presets, setPresets] = useState([])
+  const [currentPreset, setCurrentPreset] = useState(null);
   const [loading, setLoading] = useState(true)
 
 
+
+
   useEffect(() => {
-    ; (async () => {
-      const response = await fetch('clock/presets')
-      const data = await response.json()
-      setPresets(data)
-      setLoading(false)
-    })()
+    refreshData();
   }, [])
 
   const refreshData = () => {
-    console.log()
     ; (async () => {
       const response = await fetch('clock/presets')
       const data = await response.json()
@@ -35,7 +35,7 @@ function SetClockProps(props) {
   const getProps = () => {
     const props = new ClockProps()
     props.fontFamily = document.getElementById('fontFamily').value
-    props.titleFontSize = titleFontSize;
+    props.titleFontSize = document.getElementById('titleFontSize').value;
     props.clockFontSize = document.getElementById('clockFontSize').value
     props.fontColor = document.getElementById('fontColor').value
     props.blinkColons = document.getElementById('blinkColons').checked;
@@ -47,16 +47,6 @@ function SetClockProps(props) {
   const setClockProps = () => {
     const setProps = getProps()
     props.setClockProps(setProps);  
-  }
-
-  const fontSizeOptions = (selctedSize) => {
-    return clockProps.availableFontSizes.map((size) => {
-      var option = <option>{size}</option>
-      if (size === selctedSize) {
-        option = <option selected>{size}</option>
-      }
-      return option
-    })
   }
 
   const setFontFamilyUI = () => {
@@ -114,11 +104,59 @@ function SetClockProps(props) {
 
   useEffect(() => {
     setClockProps();
-  }, [titleFontSize, clockFontSize])
+  }, [titleFontSize, clockFontSize, fontColor])
+
+   //DMZ Handle clock font color
+   const handleFontColor = (event) => {
+    setFontColor(event.target.value);
+  }
+
+  useEffect(() => {
+    setClockProps();
+  }, [])
+
+  //DMZ Set current preset
+  const handlePresetChange = (preset) => {
+    setCurrentPreset(preset);
+    setCurrentPresetId(preset.id);
+  }
+
+  useEffect(() => {
+    if (currentPreset != null) {
+      setTitleText(currentPreset.titleText)
+      setFontFamily(currentPreset.fontFamily)
+      setFontColor(currentPreset.fontColor)
+      setBlinkColons(currentPreset.blinkColons)
+      setTitleFontSize(currentPreset.titleFontSize)
+      setClockFontSize(currentPreset.clockFontSize)
+      
+      props.setClockProps(currentPreset); 
+    }
+  }, [currentPreset])
+
+  //DMZ Update Preset
+  function updatePreset() {
+
+    if (currentPresetId == null ) {
+      alert("Preset not selected");
+      return;
+    }
+
+    let currPreset = getProps();
+    currPreset.id = currentPresetId;
+
+    const reqOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(currPreset)
+    }  
+
+    fetch('clock/UpdatePreset', reqOptions)
+      .then(() => {refreshData(); setClockProps()})
+  }
 
 
   const presetsDisplay = (() => {
-    console.log(presets)
     return loading ? (
       <div>
         This is a good place to display and use the presets stored on the sever.
@@ -126,10 +164,10 @@ function SetClockProps(props) {
     ) : (
       <ul>
         {presets.map((p, i) => (
-          <li>
+          <li key={p.id} style={{textDecoration: "underline", color: "blue", cursor: "pointer"}} onClick={() => handlePresetChange(p)}>
             Preset {i + 1}:{' '}
-            {`Font: ${p.fontFamily}, Color: ${p.fontColor}, Title Size: ${p.titleFontSize}, Clock Size: ${p.clockFontSize}`}
-          </li>
+            {`Title: ${p.titleText}, Font: ${p.fontFamily}, Color: ${p.fontColor}, Title Size: ${p.titleFontSize}, Clock Size: ${p.clockFontSize}`}
+            </li>
         ))}
       </ul>
     )
@@ -193,30 +231,26 @@ function SetClockProps(props) {
           <div>
             <div>Title Font Size</div>
             <div>
-              <div class="slidecontainer">
-                <input type="range" min="12" max="64" value={titleFontSize} onChange={handleTitleFontSize} step="2" class="slider" id="titleFontSize" />
+              <div className="slidecontainer">
+                <input type="range" min="12" max="64" value={titleFontSize} onChange={handleTitleFontSize} step="2" id="titleFontSize" />
               </div>
             </div>
           </div>
           <div>
             <div>Clock Font Size</div>
             <div>
-              <div class="slidecontainer">
-                <input type="range" min="12" max="64" value={clockFontSize} onChange={handleClockFontSize} step="2" class="slider" id="clockFontSize" />
+              <div className="slidecontainer">
+                <input type="range" min="12" max="64" value={clockFontSize} onChange={handleClockFontSize} step="2" id="clockFontSize" />
               </div>
             </div>
           </div>
           <div>
+            
             <div>Font Color</div>
             <div>
-              <input
-                id="fontColor"
-                value={fontColor}
-                onChange={(e) => setFontColurUI(e)}
-                onKeyDown={handleEnter}
-              />
-              <button onClick={setClockProps}>✓</button>
+              <input type="color" id="fontColor" name="fontFolor" value={fontColor} onChange={handleFontColor} />
             </div>
+            
           </div>
           <div>
             <div>Blink Colons</div>
@@ -237,6 +271,18 @@ function SetClockProps(props) {
                 }
               >
                 Save Preset
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <div>
+              <button
+                onClick={() =>
+                  updatePreset()
+                }
+              >
+                Update Current Preset
               </button>
             </div>
           </div>

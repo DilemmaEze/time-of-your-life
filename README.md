@@ -50,13 +50,13 @@ Changes to the React Client Side SPA, will be reflected in the UI in a hot load 
 - [ ] Make the colors of the title and the clock different color values
 - [X] Save the presets to the server at this endpoint:
   `POST: https://localhost:7154/clock/presets`
-- [ ] Select a preset from the list saved on the server to replace the current values and update the clock
+- [X] Select a preset from the list saved on the server to replace the current values and update the clock
 - [ ] Add unit tests
 
 #### Server
 
-- [ ] Return a preset by the title ID
-- [ ] Add the ability to update existing presets with changes in values
+- [x] Return a preset by the title ID
+- [x] Add the ability to update existing presets with changes in values
 - [ ] Add unit tests
 - [ ] Add `ClockController` logging
 
@@ -64,7 +64,7 @@ Changes to the React Client Side SPA, will be reflected in the UI in a hot load 
 
 #### Client
 
-- [ ] Add a color picker to select the font colors for multiple colors
+- [x] Add a color picker to select the font colors for multiple colors
 - [ ] Add the ability to print the time out in text, i.e. "1:32 PM" would be printed out as "one thirty two PM"
 - [ ] Add an alarms control/presets
 - [ ] Add a testing results output report

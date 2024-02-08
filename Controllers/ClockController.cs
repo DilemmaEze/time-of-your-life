@@ -33,8 +33,23 @@ public class ClockController : ControllerBase
     [HttpPost("presets")]
     public ClockProps AddPreset([FromBody]ClockProps preset)
     {
-        preset.id = Guid.NewGuid();
+        preset.Id = Guid.NewGuid();
         _presets.Add(preset);
         return preset;
+    }
+
+    [HttpGet, Route("GetPresetById/{id}")]
+    public ClockProps GetPresetById(Guid id)
+    {   
+        return _presets.FirstOrDefault(x => x.Id == id);
+    }
+
+    [HttpPost("UpdatePreset")]
+    public IEnumerable<ClockProps> UpdatePreset([FromBody]ClockProps preset)
+    {
+        int updatedIndex = _presets.FindIndex(x => x.Id == preset.Id);
+        _presets[updatedIndex] = preset;
+        
+        return _presets;
     }
 }
